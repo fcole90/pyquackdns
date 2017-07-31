@@ -1,22 +1,43 @@
 #!/bin/sh
 
-CONFIG_FILE="$SNAP_DATA/config_parameters.json"
-ROOT=$SNAP
+BIN_FILE_NAME="quack.py"
+CONFIG_FILE_NAME="config_parameters.json"
+
+if [ -n "$SNAP_DATA" ]
+then
+    CONFIG_FILE="$SNAP_DATA/$CONFIG_FILE_NAME"
+else
+    CONFIG_FILE="$CONFIG_FILE_NAME"
+fi
+
+if [ -n "$SNAP" ]
+then
+    ROOT=$SNAP
+else
+    ROOT=`pwd`
+fi
+
+
+get_pid() {
+    get_pid_result=`ps -ef | grep "[p]ython3 $BIN_FILE_NAME" | awk '{ print $2 }'`
+}
 
 start() {
     echo "Starting.."
-    pid=`ps -ef | grep '[p]ython3 quack.py' | awk '{ print $2 }'`
+    get_pid
+    pid=$get_pid_result
     if [ -n "$pid" ]
     then
         echo "Quack is already running"
     else
-        python3 $quack.py start $CONFIG_FILE
+        python3 $BIN_FILE_NAME "start" $CONFIG_FILE
     fi
 }
  
 stop() {
     echo "Stopping.."
-    pid=`ps -ef | grep '[p]ython3 quack.py' | awk '{ print $2 }'`
+    get_pid
+    pid=$get_pid_result
     if [ -n "$pid" ]
     then
         echo $pid
@@ -29,9 +50,10 @@ stop() {
 }
 
 configure() {
-    python3 quack.py configure $CONFIG_FILE
+    python3 $BIN_FILE_NAME "configure" $CONFIG_FILE
 }
  
+# Make a choice on the 1st parameter
 case "$1" in
   start)
     start
@@ -47,6 +69,6 @@ case "$1" in
     configure
     ;;
   *)
-    python3 quack.py $1
+    python3 $BIN_FILE_NAME $@
 esac
 exit 0
