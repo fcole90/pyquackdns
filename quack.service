@@ -1,0 +1,10 @@
+[Unit]
+Description=Updates DuckDNS IP information.
+After=multi-user.target
+
+[Service]
+Type=idle
+ExecStart=python3 quack.py start
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,35 @@
+name: quack # you probably want to 'snapcraft register <name>'
+version: '0.1' # just for humans, typically '1.2+git' or '1.3.2'
+summary: Keeps your DuckDNS IP information updated. # 79 char long summary
+description: |
+  Keeps your DuckDNS IP information updated.
+
+grade: devel # must be 'stable' to release into candidate/stable channels
+confinement: devmode # use 'strict' once you have the right plugs and slots
+
+apps: 
+  quack:
+    daemon: simple
+    command: "quack.py start"
+    stop-command: "quack stop"
+    restart-condition: always
+    plugs:
+    - network-bind
+    - network
+  quack-config:
+    command: "quack.py configure"
+    plugs:
+    - network-bind
+    - network
+
+parts:
+  python-deps:
+    # See 'snapcraft plugins'
+    plugin: python
+    python-packages: [requests]
+  quack:
+    plugin: dump
+    stage-packages: [procps, grep, awk, ca-certificates]
+    organize:
+      quack.sh: bin/quack
+      quack.py: bin/quack.py
