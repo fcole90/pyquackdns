@@ -10,14 +10,19 @@ confinement: devmode # use 'strict' once you have the right plugs and slots
 apps: 
   quack:
     daemon: simple
-    command: "quack.py start"
+    command: "quack start"
     stop-command: "quack stop"
     restart-condition: always
     plugs:
     - network-bind
     - network
   quack-config:
-    command: "quack.py configure"
+    command: "quack configure"
+    plugs:
+    - network-bind
+    - network
+  quack-app:
+    command: "echo 'Running in app mode..'; quack start"
     plugs:
     - network-bind
     - network
