@@ -17,12 +17,12 @@ apps:
     - network-bind
     - network
   quack-config:
-    command: "quack configure"
+    command: "quack.py configure"
     plugs:
     - network-bind
     - network
   quack-app:
-    command: "echo 'Running in app mode..'; quack start"
+    command: "echo 'Running in app mode..'; quack.py start"
     plugs:
     - network-bind
     - network
