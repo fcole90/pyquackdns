@@ -17,12 +17,12 @@ apps:
     - network-bind
     - network
   quack-config:
-    command: "quack.py configure"
+    command: "quack.py configure $SNAP_DATA/config_parameters.json"
     plugs:
     - network-bind
     - network
   quack-app:
-    command: "echo 'Running in app mode..'; quack.py start"
+    command: "echo 'Running in app mode..' && quack.py start $SNAP_DATA/config_parameters.json"
     plugs:
     - network-bind
     - network
