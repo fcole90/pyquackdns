@@ -10,7 +10,7 @@ class CoreTest(unittest.TestCase):
 
         :return:
         """
-        mock_updater = core.MockUpdater(None)
+        mock_updater = core.MockUpdater(None, None)
         success_response = "Updated!"
 
         self.assertEqual(mock_updater.update(), success_response)
