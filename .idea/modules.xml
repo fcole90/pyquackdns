@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/../quack-dns/.idea/quack-dns.iml" filepath="$PROJECT_DIR$/../quack-dns/.idea/quack-dns.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/quackdns.iml" filepath="$PROJECT_DIR$/.idea/quackdns.iml" />
     </modules>
   </component>
 </project>

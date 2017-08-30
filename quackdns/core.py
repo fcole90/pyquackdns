@@ -1,5 +1,6 @@
 # Library of functions interacting with DuckDNS
 from abc import ABC, abstractmethod
+import requests
 
 
 class AbstractUpdater(ABC):
