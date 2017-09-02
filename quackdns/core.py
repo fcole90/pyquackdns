@@ -12,15 +12,26 @@ class AbstractUpdater(ABC):
     every Updater should have.
     """
 
-    def __init__(self, domains, token, ip=None, ipv6=None, verbose='true', clear=None):
+    def __init__(self,
+                 domains,
+                 token,
+                 ip=None,
+                 ipv6=None,
+                 verbose='true',
+                 clear=None):
         """
 
-        :param domains: required - comma separated list of the subnames you want to update
+        :param domains: required - comma separated
+        list of the subnames you want to update
         :param token: required - your account token
-        :param ip: optional - an ipv4 address, if left blank the ip is detected automatically
-        :param ipv6: optional - an ipv6 address, if left blank the ip is detected automatically
-        :param verbose: optional - defaults to 'true', else it can be set to 'false'
-        :param clear: optional - if set to 'true'it clears any data about the ip addresses
+        :param ip: optional - an ipv4 address,
+        if left blank the ip is detected automatically
+        :param ipv6: optional - an ipv6 address,
+        if left blank the ip is detected automatically
+        :param verbose: optional - defaults to 'true',
+        else it can be set to 'false'
+        :param clear: optional - if set to 'true'it clears
+        any data about the ip addresses
         """
         super().__init__()
 
@@ -33,7 +44,13 @@ class AbstractUpdater(ABC):
         self.__clear__ = clear
 
         self.__dns_url__ = __DUCK_DNS_URL__
+        self.__verify_secure_connection__ = True
 
+    def get_dns_url(self):
+        return self.__dns_url__
+
+    def get_verify_secure_connection(self):
+        return self.__verify_secure_connection__
 
     def get_params_dict(self):
         params = dict()
@@ -50,13 +67,13 @@ class AbstractUpdater(ABC):
             params['verbose'] = self.__verbose__
 
         if self.__clear__:
-            params['clear']
+            params['clear'] = self.__clear__
 
         return params
 
     def loop_update(self, sleep_seconds):
         while True:
-            self.update
+            self.update()
             time.sleep(sleep_seconds)
 
     @abstractmethod
@@ -70,6 +87,39 @@ class MockUpdater(AbstractUpdater):
     to update the DuckDNS information.
     """
 
+    def __init__(self):
+        super().__init__("mock-domain", "mock-token")
+
     def update(self):
         response = "Updated!"
         return response
+
+
+class Updater(AbstractUpdater):
+    """
+    Default implementation of an Updater.
+
+    It sends an HTTP GET request to the default server.
+    """
+
+    def __init__(self,
+                 domains,
+                 token,
+                 ip=None,
+                 ipv6=None,
+                 verbose='true',
+                 clear=None):
+        super().__init__(domains,
+                         token,
+                         ip=None,
+                         ipv6=None,
+                         verbose='true',
+                         clear=None)
+        pass
+
+    def update(self):
+        params = self.get_params_dict()
+        response = requests.get(self.get_dns_url(),
+                                params=params,
+                                verify=self.get_verify_secure_connection())
+        return response.text

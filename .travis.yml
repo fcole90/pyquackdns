@@ -8,4 +8,4 @@ python:
 install:
   - pip install .
 # command to run tests
-script: python3 -m unittest discover -s . -p "*_test.py"
+script: python3 -m unittest discover -s . -p "*_test.py" && python3 -p pep8 .
