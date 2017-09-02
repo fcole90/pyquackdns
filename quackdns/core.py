@@ -13,10 +13,10 @@ class AbstractUpdater(ABC):
     """
 
     def __init__(self,
-                 domains,
-                 token,
-                 ip=None,
-                 ipv6=None,
+                 domains: str,
+                 token: str,
+                 ip: str=None,
+                 ipv6: str=None,
                  verbose='true',
                  clear=None):
         """
@@ -36,7 +36,7 @@ class AbstractUpdater(ABC):
         super().__init__()
 
         # Initialise parameters
-        self.__domains__ = domains
+        self.set_domains(domains)
         self.__token__ = token
         self.__ip__ = ip
         self.__ipv6__ = ipv6
@@ -45,6 +45,27 @@ class AbstractUpdater(ABC):
 
         self.__dns_url__ = __DUCK_DNS_URL__
         self.__verify_secure_connection__ = True
+
+    def is_valid_domains(self, domains):
+        if domains is None or domains == "":
+            return False
+
+        domains_list = domains.split(",")
+
+        for domain in domains_list:
+            # todo: use a regex
+            if domain == "":  # Empty string
+                return False
+            if " " in domain:  # Contains whitespaces
+                return False
+
+        return True
+
+    def set_domains(self, domains):
+        if self.is_valid_domains(domains):
+            self.__domains__ = domains
+        else:
+            raise InvalidParameterError("domains")
 
     def get_dns_url(self):
         return self.__dns_url__
@@ -123,3 +144,13 @@ class Updater(AbstractUpdater):
                                 params=params,
                                 verify=self.get_verify_secure_connection())
         return response.text
+
+
+class InvalidParameterError(Exception):
+    def __init__(self, invalid_parameter, reason=None):
+        self.msg = "Parameter '{}' is not valid.".format(invalid_parameter)
+        if reason:
+            self.msg += "Reason: {}.".format(reason)
+
+    def __str__(self):
+        return repr(self.msg)

@@ -1,4 +1,5 @@
 import quackdns.core as core
+import sys
 import unittest
 
 __TEST_TOKEN__ = "b10eae0b-4153-41cc-8be1-1c811de51c0d"
@@ -22,8 +23,15 @@ class MockUpdaterTest(unittest.TestCase):
 class UpdaterTest(unittest.TestCase):
     def test_updater(self):
         updater = core.Updater(token=__TEST_TOKEN__, domains=__TEST_DOMAIN__)
-        updater.update()
-        self.assertIsNotNone(updater)
+
+        e = None
+        response = ""
+        try:
+            response = updater.update()
+        except:
+            e = sys.exc_info()[0]
+        self.assertIsNone(e)
+        self.assertIsNot(response, "")
 
 
 if __name__ == '__main__':
